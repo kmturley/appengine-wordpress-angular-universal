@@ -11,24 +11,40 @@ Example Wordpress project using:
 
 ## Installation
 
-Install dependencies and build images using:
+If you need to use an existing database, place it at:
 
-    docker-compose build
+    backend/backup.sql
+
+Start by running the docker container locally:
+
+    docker-compose up
+
+Then go to the admin to continue installation at:
+
+    http://localhost:8080/
+
+Enable permalinks by going to:
+
+    http://localhost:8080/wp-admin/options-permalink.php
+
+Setting Custom Structure to be:
+
+    /%category%/%postname%/
+
+Setting Category Base to be:
+
+    .
 
 
 ## Usage
 
-Run the backend and frontend together using:
-
-    docker-compose up
-
-View the Wordpress backend at:
-
-    http://localhost:8080/
-
 View the Angular frontend at:
 
     http://localhost:4200/
+
+And use the Wordpress API at:
+
+    http://localhost:8080/wp-json/wp/v2/posts
 
 
 ## Automatic Deployment
@@ -48,13 +64,25 @@ Click 'Add Trigger' and name it 'Frontend'. Then set Cloud Build configuration f
 
 ## Manual Deployment
 
-Deploy frontend service:
+Ensure you have just backend and mysql running:
+
+    docker-compose stop
+    docker-compose up backend db
+
+In a second terminal window, generate a static build:
 
     cd frontend
     gcloud init
     npm install
     npm run build:prerender
     npm run deploy
+
+
+## Exporting the database
+
+Export database to local:
+
+    docker-compose exec db /usr/bin/mysqldump -u root --password=examplepass --databases exampledb > backend/backup.sql
 
 
 ## Directory structure
