@@ -1,0 +1,8 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# ignore composer files
+vendor
+
+# ignore installed plugins & themes
+wp-content/plugins
+wp-content/themes

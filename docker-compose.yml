@@ -1,0 +1,38 @@
+version: '3'
+services:
+
+  backend:
+    build: ./backend
+    command: apache2-foreground
+    ports:
+      - 8080:80
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: exampleuser
+      WORDPRESS_DB_PASSWORD: examplepass
+      WORDPRESS_DB_NAME: exampledb
+    # volumes:
+    #   - ./backend:/var/www/html:rw
+    #   - /var/www/html/vendor
+
+  db:
+    image: mysql:5.7
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: exampledb
+      MYSQL_USER: exampleuser
+      MYSQL_PASSWORD: examplepass
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    # volumes:
+    #   - ./backend/backup.sql:/docker-entrypoint-initdb.d/dump.sql
+
+  frontend:
+    build: ./frontend
+    command: npm start
+    ports:
+      - 4200:4200
+    volumes:
+      - ./frontend:/usr/src/app:rw
+      - /usr/src/app/node_modules
