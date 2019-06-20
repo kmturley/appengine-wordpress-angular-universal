@@ -1,13 +1,24 @@
 {
   "name": "angular-wordpress",
   "version": "0.0.0",
+  "engines": {
+    "node": ">=10.0.0"
+  },
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "deploy": "gcloud app deploy",
+    "start": "ng serve --host 0.0.0.0",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "build:client-and-server-bundles": "ng build --prod && ng run ng-universal-demo:server:production",
+    "build:prerender": "npm run build:client-and-server-bundles && npm run compile:server && npm run generate:prerender",
+    "build:ssr": "npm run build:client-and-server-bundles && npm run compile:server",
+    "compile:server": "webpack --config webpack.server.config.js --progress --colors",
+    "generate:prerender": "cd dist && node prerender",
+    "serve:prerender": "cd dist/browser && http-server",
+    "serve:ssr": "node dist/server"
   },
   "private": true,
   "dependencies": {
@@ -18,7 +29,12 @@
     "@angular/forms": "~8.0.1",
     "@angular/platform-browser": "~8.0.1",
     "@angular/platform-browser-dynamic": "~8.0.1",
+    "@angular/platform-server": "~8.0.1",
     "@angular/router": "~8.0.1",
+    "@nguniversal/express-engine": "^7.0.2",
+    "@nguniversal/module-map-ngfactory-loader": "v7.0.2",
+    "express": "^4.15.2",
+    "request-promise": "^4.2.4",
     "rxjs": "~6.4.0",
     "tslib": "^1.9.0",
     "zone.js": "~0.9.1"
@@ -40,8 +56,10 @@
     "karma-jasmine": "~2.0.1",
     "karma-jasmine-html-reporter": "^1.4.0",
     "protractor": "~5.4.0",
+    "ts-loader": "^5.2.0",
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",
-    "typescript": "~3.4.3"
+    "typescript": "~3.4.3",
+    "webpack-cli": "^3.1.0"
   }
 }
