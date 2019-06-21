@@ -3,6 +3,5 @@
 # ignore composer files
 vendor
 
-# ignore installed plugins & themes
+# ignore compiled folder
 dist
-
