@@ -47,6 +47,19 @@ And use the Wordpress API at:
     http://localhost:8080/wp-json/wp/v2/posts
 
 
+## Database creation
+
+Enable the SQL API at:
+
+    https://console.cloud.google.com/flows/enableapi?apiid=sqladmin
+
+Then create the database using the commands:
+
+    gcloud sql instances create wordpress --activation-policy=ALWAYS --tier=db-n1-standard-1
+    gcloud sql databases create wordpress --instance wordpress
+    gcloud sql users set-password root --host=% --instance wordpress --password=X
+
+
 ## Automatic Deployment
 
 Go to Google Cloud Build:

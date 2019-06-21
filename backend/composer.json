@@ -1,5 +1,29 @@
 {
-    "require": {
-        "elliotcondon/acf": "^4.4"
+  "name": "kmturley/appengine-wordpress",
+  "description": "Example project showing WordPress running on AppEngine",
+  "type": "project",
+  "scripts": {
+    "merge-content": "cp -R temp/* src/wp-content && rm -r temp",
+    "post-install-cmd": "composer run-script merge-content",
+    "post-update-cmd": "composer run-script merge-content"
+  },
+  "require": {
+    "php": ">=7.1",
+    "johnpbloch/wordpress": "^5.2",
+    "wpackagist-plugin/advanced-custom-fields": "5.8.1",
+    "wpackagist-plugin/gcs": "0.1.4"
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://wpackagist.org"
     }
+  ],
+  "extra": {
+    "installer-paths": {
+      "temp/plugins/{$name}/": ["type:wordpress-plugin"],
+      "temp/themes/{$name}/": ["type:wordpress-theme"]
+    },
+    "wordpress-install-dir": "src"
+  }
 }

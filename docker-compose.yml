@@ -3,7 +3,7 @@ services:
 
   backend:
     build: ./backend
-    command: apache2-foreground
+    command: php -S 0.0.0.0:80 -t src
     ports:
       - 8080:80
     environment:

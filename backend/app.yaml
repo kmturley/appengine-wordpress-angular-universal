@@ -1,6 +1,6 @@
 runtime: php72
 service: backend
-entrypoint: serve gae-app.php
+entrypoint: serve src/gae-app.php
 
 handlers:
 - url: /(.*\.(htm|html|css|js))
@@ -8,13 +8,13 @@ handlers:
   upload: .*\.(htm|html|css|js)$
 
 - url: /wp-content/(.*\.(ico|jpg|jpeg|png|gif|woff|ttf|otf|eot|svg))
-  static_files: wp-content/\1
-  upload: wp-content/.*\.(ico|jpg|jpeg|png|gif|woff|ttf|otf|eot|svg)$
+  static_files: src/wp-content/\1
+  upload: src/wp-content/.*\.(ico|jpg|jpeg|png|gif|woff|ttf|otf|eot|svg)$
 
 - url: /(.*\.(ico|jpg|jpeg|png|gif|woff|ttf|otf|eot|svg))
-  static_files: \1
-  upload: .*\.(ico|jpg|jpeg|png|gif|woff|ttf|otf|eot|svg)$
+  static_files: src/\1
+  upload: src/.*\.(ico|jpg|jpeg|png|gif|woff|ttf|otf|eot|svg)$
 
 - url: /wp-includes/images/media/(.*\.(ico|jpg|jpeg|png|gif|woff|ttf|otf|eot|svg))
-  static_files: wp-includes/images/media/\1
-  upload: wp-includes/images/media/.*\.(ico|jpg|jpeg|png|gif|woff|ttf|otf|eot|svg)$
+  static_files: src/wp-includes/images/media/\1
+  upload: src/wp-includes/images/media/.*\.(ico|jpg|jpeg|png|gif|woff|ttf|otf|eot|svg)$
