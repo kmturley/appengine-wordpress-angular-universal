@@ -1,8 +1,18 @@
-import { ApplicationRef, NgModuleFactory, NgModuleRef, PlatformRef, StaticProvider, Type } from '@angular/core';
-import { ɵTRANSITION_ID } from '@angular/platform-browser';
-import { first } from 'rxjs/operators';
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 
-import { BEFORE_APP_SERIALIZED, INITIAL_CONFIG, platformDynamicServer, platformServer, PlatformState } from '@angular/platform-server';
+import {ApplicationRef, NgModuleFactory, NgModuleRef, PlatformRef, StaticProvider, Type, ɵisPromise} from '@angular/core';
+import {ɵTRANSITION_ID} from '@angular/platform-browser';
+import {first} from 'rxjs/operators';
+
+import {PlatformState} from '@angular/platform-server';
+import {platformDynamicServer, platformServer} from '@angular/platform-server';
+import {BEFORE_APP_SERIALIZED, INITIAL_CONFIG} from '@angular/platform-server';
 
 interface PlatformOptions {
   document?: string;
@@ -35,29 +45,62 @@ the server-rendered app can be properly bootstrapped into a client app.`);
         .then(() => {
           const platformState = platform.injector.get(PlatformState);
 
+          const asyncPromises: any[] = [];
+
           // Run any BEFORE_APP_SERIALIZED callbacks just before rendering to string.
           const callbacks = moduleRef.injector.get(BEFORE_APP_SERIALIZED, null);
           let data = null;
           if (callbacks) {
             for (const callback of callbacks) {
               try {
-                data = callback();
+                const callbackResult = callback();
+                data = callbackResult;
+                if (ɵisPromise(callbackResult)) {
+                  asyncPromises.push(callbackResult);
+                }
+
               } catch (e) {
                 // Ignore exceptions.
                 console.warn('Ignoring BEFORE_APP_SERIALIZED Exception: ', e);
               }
             }
           }
-          const output = platformState.renderToString();
-          platform.destroy();
-          return {
-            output: output,
-            data: data
+
+          const complete = () => {
+            const output = platformState.renderToString();
+            platform.destroy();
+            return {
+              output: output,
+              data: data
+            };
           };
+
+          if (asyncPromises.length === 0) {
+            return complete();
+          }
+
+          return Promise
+              .all(asyncPromises.map(asyncPromise => {
+                return asyncPromise.catch(
+                    e => { console.warn('Ignoring BEFORE_APP_SERIALIZED Exception: ', e); });
+              }))
+              .then(complete);
         });
   });
 }
 
+/**
+ * Renders a Module to string.
+ *
+ * `document` is the full document HTML of the page to render, as a string.
+ * `url` is the URL for the current render request.
+ * `extraProviders` are the platform level providers for the current render request.
+ *
+ * Do not use this in a production server environment. Use pre-compiled {@link NgModuleFactory} with
+ * {@link renderModuleFactory} instead.
+ *
+ * @publicApi
+ */
 export function renderModule<T>(
     module: Type<T>, options: {document?: string, url?: string, extraProviders?: StaticProvider[]}):
     Promise<object> {
@@ -65,6 +108,15 @@ export function renderModule<T>(
   return _render(platform, platform.bootstrapModule(module));
 }
 
+/**
+ * Renders a {@link NgModuleFactory} to string.
+ *
+ * `document` is the full document HTML of the page to render, as a string.
+ * `url` is the URL for the current render request.
+ * `extraProviders` are the platform level providers for the current render request.
+ *
+ * @publicApi
+ */
 export function renderModuleFactory<T>(
     moduleFactory: NgModuleFactory<T>,
     options: {document?: string, url?: string, extraProviders?: StaticProvider[]}):

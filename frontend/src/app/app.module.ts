@@ -20,7 +20,7 @@ export function init(routeService: AppRoutingService) {
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
     BrowserTransferStateModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   providers: [
     {

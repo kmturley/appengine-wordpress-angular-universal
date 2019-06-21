@@ -1,0 +1,26 @@
+
+# Dist folder needs to be uploaded on deploy, if serving static_files using app.yaml 
+# dist/
+e2e/
+node_modules/
+src/
+.editorconfig
+.gitignore
+angular.json
+browserslist
+cloudbuild.yaml
+Dockerfile
+karma.conf.js
+package-lock.json
+package.json
+prerender.ts
+README.md
+server.ts
+static.paths.ts
+tsconfig.app.json
+tsconfig.json
+tsconfig.server.json
+tsconfig.spec.json
+tslint.json
+utils.ts
+webpack.server.config.js
