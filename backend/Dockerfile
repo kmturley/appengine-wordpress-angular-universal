@@ -12,4 +12,4 @@ RUN composer install --verbose
 COPY . /var/www/html
 
 EXPOSE 80
-CMD ["php -S 0.0.0.0:80 -t src"]
+CMD ["php -S 0.0.0.0:80 -t dist"]

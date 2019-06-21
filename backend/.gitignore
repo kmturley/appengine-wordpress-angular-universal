@@ -4,5 +4,5 @@
 vendor
 
 # ignore installed plugins & themes
-wp-content/plugins
-wp-content/themes
+dist
+
