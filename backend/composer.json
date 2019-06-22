@@ -3,6 +3,8 @@
   "description": "Example project showing WordPress running on AppEngine",
   "type": "project",
   "scripts": {
+    "build": "composer run-script copy-src",
+    "deploy": "gcloud app deploy dist/app.yaml dist/cron.yaml",
     "copy-src": "cp -R src/* dist",
     "copy-plugins": "cp -R temp/* dist/wp-content && rm -r temp",
     "post-install-cmd": "composer run-script copy-plugins && composer run-script copy-src",

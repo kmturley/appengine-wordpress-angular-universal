@@ -110,7 +110,7 @@ define('WPLANG', '');
  * It is strongly recommended that plugin and theme developers use WP_DEBUG
  * in their development environments.
  */
-define('WP_DEBUG', !$onGae);
+define('WP_DEBUG', true);
 
 /* That's all, stop editing! Happy blogging. */
 /** Absolute path to the WordPress directory. */
