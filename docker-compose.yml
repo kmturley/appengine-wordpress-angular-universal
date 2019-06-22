@@ -3,7 +3,7 @@ services:
 
   backend:
     build: ./backend
-    command: php -S 0.0.0.0:80 -t src
+    command: php -S 0.0.0.0:80 -t dist
     ports:
       - 8080:80
     environment:

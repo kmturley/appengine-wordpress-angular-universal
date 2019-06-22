@@ -115,7 +115,7 @@ define('WP_DEBUG', !$onGae);
 /* That's all, stop editing! Happy blogging. */
 /** Absolute path to the WordPress directory. */
 if (!defined('ABSPATH')) {
-    define('ABSPATH', dirname(__FILE__) . '/wordpress/');
+    define('ABSPATH', dirname(__FILE__) . '/dist/');
 }
 
 /** Sets up WordPress vars and included files. */
