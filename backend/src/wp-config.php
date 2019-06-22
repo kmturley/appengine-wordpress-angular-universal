@@ -48,7 +48,7 @@ if ($onGae) {
     /** The name of the Cloud SQL database for WordPress */
     define('DB_NAME', 'wordpress');
     /** Production login info */
-    define('DB_HOST', ':/cloudsql/wordpress-angular-universal:us-central:wordpress');
+    define('DB_HOST', ':/cloudsql/wordpress-angular-universal:us-central1:wordpress');
     define('DB_USER', 'wordpress');
     define('DB_PASSWORD', 'examplepass');
 } else {

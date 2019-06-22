@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  url: 'http://localhost:8080'
+  url: 'https://backend-dot-wordpress-angular-universal.appspot.com'
 };
