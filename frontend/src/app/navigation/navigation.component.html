@@ -1,0 +1,7 @@
+<ul>
+  <ng-container *ngFor="let item of items">
+    <li *ngIf="item.data.type=='page'">
+      <a [routerLink]="item.path">{{ item.data.title }}</a>
+    </li>
+  </ng-container>
+</ul>

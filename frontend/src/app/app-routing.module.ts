@@ -5,7 +5,13 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingService } from './app-routing.service';
 import { AuthService } from './shared/auth.service';
 
-const routes: Routes = [];
+const routes: Routes = [
+  {
+    path: 'modules/page',
+    pathMatch: 'full',
+    loadChildren: './page/page.module#PageModule'
+  }
+];
 
 @NgModule({
   imports: [
