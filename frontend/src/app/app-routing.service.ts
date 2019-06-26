@@ -1,14 +1,9 @@
-import { Injectable, NgModule } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { ApiService } from './shared/api.service';
 import { Routes } from '@angular/router';
 
 import { environment } from '../environments/environment';
-
-/*
- * Wordpress API
- * Need to find a better way of getting all pages, categories and posts
- * Maybe use the sitemap functionality which should list all pages in the site
- */
+import { forkJoin } from 'rxjs';
 
 @Injectable()
 export class AppRoutingService {
@@ -19,26 +14,29 @@ export class AppRoutingService {
   ) { }
 
   static appRoutingInit(routeService: AppRoutingService) {
-    return () => routeService.getRoutes();
+    return () => routeService.getRoutes().toPromise();
   }
 
   getRoutes() {
-    return Promise.all([
-      this.api.getPages(environment.url + '/wp-json/wp/v2/pages', 'pages').toPromise(),
-      this.api.getPages(environment.url + '/wp-json/wp/v2/categories', 'categories').toPromise()
-    ]).then((values) => {
-      console.log('values', values);
+    const observe = forkJoin([
+      this.api.getPages(environment.url + '/wp-json/wp/v2/pages', 'pages'),
+      this.api.getCategories(environment.url + '/wp-json/wp/v2/categories', 'categories'),
+    ]);
+    observe.subscribe(values => {
+      console.log('getRoutes', values);
       values.forEach((value) => {
         this.addRoutes(value);
       });
       return this.routes;
     });
+    return observe;
   }
 
   addRoutes(items) {
     items.forEach(route => {
       let path = route.link.slice(environment.url.length + 1, -1);
-      let type = route.type ? route.type : route.taxonomy;
+      const title = route.title ? route.title.rendered : route.name;
+      const type = route.type ? route.type : route.taxonomy;
       if (path.startsWith('./')) {
         path = path.slice(2);
       }
@@ -47,23 +45,10 @@ export class AppRoutingService {
           path: path,
           loadChildren: './' + type + '/' + type + '.module#' + type.charAt(0).toUpperCase() + type.slice(1) + 'Module',
           data: {
-            title: route.title ? route.title.rendered : route.name,
+            title: title,
             type: type
           }
       });
-      // add child route
-      if (route.taxonomy === 'category') {
-        type = 'post';
-        this.routes.push({
-          pathMatch: 'full',
-          path: path + '/:id',
-          loadChildren: './' + type + '/' + type + '.module#' + type.charAt(0).toUpperCase() + type.slice(1) + 'Module',
-          data: {
-            title: route.title ? route.title.rendered : route.name,
-            type: type
-          }
-        });
-      }
     });
   }
 }
