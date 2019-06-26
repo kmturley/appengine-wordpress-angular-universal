@@ -1,24 +1,23 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest} from '@angular/common/http';
-import { isPlatformBrowser, isPlatformServer } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
 
 @Injectable()
 export class AuthService implements HttpInterceptor {
 
   constructor(
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: object
   ) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    let auth = ''; // environment.TOKEN;
+    let auth = '';
     if (isPlatformBrowser(this.platformId)) {
       auth = localStorage.getItem('token');
     }
     req = req.clone({
       setHeaders: {
-        'Authorization': `Bearer ${auth}`
+        Authorization: `Bearer ${auth}`
       }
     });
     return next.handle(req);

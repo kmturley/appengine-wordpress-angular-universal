@@ -18,6 +18,23 @@ export class AppRoutingService {
     private api: ApiService
   ) { }
 
+  static appRoutingInit(routeService: AppRoutingService) {
+    return () => routeService.getRoutes();
+  }
+
+  getRoutes() {
+    return Promise.all([
+      this.api.getPages(environment.url + '/wp-json/wp/v2/pages', 'pages').toPromise(),
+      this.api.getPages(environment.url + '/wp-json/wp/v2/categories', 'categories').toPromise()
+    ]).then((values) => {
+      console.log('values', values);
+      values.forEach((value) => {
+        this.addRoutes(value);
+      });
+      return this.routes;
+    });
+  }
+
   addRoutes(items) {
     items.forEach(route => {
       let path = route.link.slice(environment.url.length + 1, -1);
@@ -47,18 +64,6 @@ export class AppRoutingService {
           }
         });
       }
-    });
-  }
-
-  getRoutes() {
-    return Promise.all([
-      this.api.get(environment.url + '/wp-json/wp/v2/pages', 'pages').toPromise(),
-      this.api.get(environment.url + '/wp-json/wp/v2/categories', 'categories').toPromise()
-    ]).then((values) => {
-      values.forEach((value) => {
-        this.addRoutes(value);
-      });
-      return this.routes;
     });
   }
 }
