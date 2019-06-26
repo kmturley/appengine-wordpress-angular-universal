@@ -1,20 +1,19 @@
 {
-  "compileOnSave": false,
+  "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "sourceMap": true,
-    "declaration": false,
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "target": "es5",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "es2017",
-      "dom"
-    ]
+    "baseUrl": "./",
+    // Set the module format to "commonjs":
+    "module": "commonjs",
+    "types": []
   },
-  "include": ["server.ts", "prerender.ts", "src/main.server.ts"]
+  "exclude": [
+    "test.ts",
+    "**/*.spec.ts"
+  ],
+  // Add "angularCompilerOptions" with the AppServerModule you wrote
+  // set as the "entryModule".
+  "angularCompilerOptions": {
+    "entryModule": "src/app/app.server.module#AppServerModule"
+  }
 }

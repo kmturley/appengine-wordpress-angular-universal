@@ -4,16 +4,16 @@ import { Observable } from 'rxjs';
 
 import { ApiService } from '../shared/api.service';
 import { environment } from '../../environments/environment';
-import { Page } from '../shared/models';
+import { Post } from '../shared/models';
 
 @Component({
-  selector: 'app-page',
-  templateUrl: './page.component.html',
-  styleUrls: ['./page.component.scss'],
+  selector: 'app-post',
+  templateUrl: './post.component.html',
+  styleUrls: ['./post.component.scss'],
 })
 
-export class PageComponent implements OnInit {
-  public page: Observable<Page>;
+export class PostComponent implements OnInit {
+  public post: Observable<Post>;
 
   constructor(
     private api: ApiService,
@@ -22,7 +22,7 @@ export class PageComponent implements OnInit {
 
   ngOnInit() {
     this.route.data.subscribe(data => {
-      this.page = this.api.getPage(data.id);
+      this.post = this.api.getPost(data.id);
     });
   }
 }

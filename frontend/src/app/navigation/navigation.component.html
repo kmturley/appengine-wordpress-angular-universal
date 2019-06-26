@@ -1,6 +1,25 @@
+<b>Pages</b>
 <ul>
   <ng-container *ngFor="let item of items">
     <li *ngIf="item.data.type=='page'">
+      <a [routerLink]="item.path">{{ item.data.title }}</a>
+    </li>
+  </ng-container>
+</ul>
+
+<b>Categories</b>
+<ul>
+  <ng-container *ngFor="let item of items">
+    <li *ngIf="item.data.type=='category'">
+      <a [routerLink]="item.path">{{ item.data.title }}</a>
+    </li>
+  </ng-container>
+</ul>
+
+<b>Posts</b>
+<ul>
+  <ng-container *ngFor="let item of items">
+    <li *ngIf="item.data.type=='post'">
       <a [routerLink]="item.path">{{ item.data.title }}</a>
     </li>
   </ng-container>

@@ -6,7 +6,7 @@ import { map, catchError } from 'rxjs/operators';
 import { Observable, of, throwError } from 'rxjs';
 
 import { environment } from '../../environments/environment';
-import { Category, Page } from '../shared/models';
+import { Category, Page, Post } from '../shared/models';
 
 @Injectable({
   providedIn: 'root'
@@ -20,36 +20,77 @@ export class ApiService {
     private transferState: TransferState,
   ) { }
 
-  getCategory(url: string, id: string): Observable<Category> {
-    return this.get(url, id, (): Observable<any> => {
+  createKey(type: string, id?: number) {
+    if (id) {
+      return `${type}_${id}`;
+    } else {
+      return type;
+    }
+  }
+
+  createUrl(path: string) {
+    return `${environment.url}/wp-json/wp/v2/${path}`;
+  }
+
+  getCategory(id: number): Observable<Category> {
+    const key = this.createKey(`categories`, id);
+    const url = this.createUrl(`categories/${id}`);
+    return this.get(url, key, (): Observable<any> => {
       return this.http.get<Category>(url).pipe(
-        map(data => this.set(id, new Category().deserialize(data))),
+        map(data => this.set(key, new Category().deserialize(data))),
         catchError(() => throwError('Category not found'))
       );
     });
   }
 
-  getCategories(url: string, id: string): Observable<Category[]> {
-    return this.get(url, id, (): Observable<any> => {
+  getCategories(): Observable<Category[]> {
+    const key = this.createKey(`categories`);
+    const url = this.createUrl(`categories`);
+    return this.get(url, key, (): Observable<any> => {
       return this.http.get<Category[]>(url).pipe(
-        map(items => this.set(id, items.map(item => new Category().deserialize(item))))
+        map(items => this.set(key, items.map(item => new Category().deserialize(item))))
       );
     });
   }
 
-  getPage(url: string, id: string): Observable<Page> {
-    return this.get(url, id, (): Observable<any> => {
+  getPage(id: number): Observable<Page> {
+    const key = this.createKey(`pages`, id);
+    const url = this.createUrl(`pages/${id}`);
+    return this.get(url, key, (): Observable<any> => {
       return this.http.get<Page>(url).pipe(
-        map(data => this.set(id, new Page().deserialize(data))),
+        map(data => this.set(key, new Page().deserialize(data))),
         catchError(() => throwError('Page not found'))
       );
     });
   }
 
-  getPages(url: string, id: string): Observable<Page[]> {
-    return this.get(url, id, (): Observable<any> => {
+  getPages(): Observable<Page[]> {
+    const key = this.createKey(`pages`);
+    const url = this.createUrl(`pages`);
+    return this.get(url, key, (): Observable<any> => {
       return this.http.get<Page[]>(url).pipe(
-        map(items => this.set(id, items.map(item => new Page().deserialize(item))))
+        map(items => this.set(key, items.map(item => new Page().deserialize(item))))
+      );
+    });
+  }
+
+  getPost(id: number): Observable<Post> {
+    const key = this.createKey(`posts`, id);
+    const url = this.createUrl(`posts/${id}`);
+    return this.get(url, key, (): Observable<any> => {
+      return this.http.get<Post>(url).pipe(
+        map(data => this.set(key, new Post().deserialize(data))),
+        catchError(() => throwError('Post not found'))
+      );
+    });
+  }
+
+  getPosts(): Observable<Post[]> {
+    const key = this.createKey(`posts`);
+    const url = this.createUrl(`posts`);
+    return this.get(url, key, (): Observable<any> => {
+      return this.http.get<Post[]>(url).pipe(
+        map(items => this.set(key, items.map(item => new Post().deserialize(item))))
       );
     });
   }

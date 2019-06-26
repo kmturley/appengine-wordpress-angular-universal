@@ -19,8 +19,9 @@ export class AppRoutingService {
 
   getRoutes() {
     const observe = forkJoin([
-      this.api.getPages(environment.url + '/wp-json/wp/v2/pages', 'pages'),
-      this.api.getCategories(environment.url + '/wp-json/wp/v2/categories', 'categories'),
+      this.api.getCategories(),
+      this.api.getPages(),
+      this.api.getPosts(),
     ]);
     observe.subscribe(values => {
       console.log('getRoutes', values);

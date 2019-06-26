@@ -15,14 +15,17 @@ function addPaths(items) {
     if (path.startsWith('./')) {
       path = path.slice(2);
     }
+    if (path === 'home') {
+      path = '';
+    }
     routes.push('/' + path);
   });
 }
 
 export function getPaths() {
   return Promise.all([
-    rp({uri: environment.url + '/wp-json/wp/v2/pages', json: true}),
     rp({uri: environment.url + '/wp-json/wp/v2/categories', json: true}),
+    rp({uri: environment.url + '/wp-json/wp/v2/pages', json: true}),
     rp({uri: environment.url + '/wp-json/wp/v2/posts', json: true})
   ]).then((values) => {
     values.forEach((value) => {

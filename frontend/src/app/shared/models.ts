@@ -18,3 +18,13 @@ export class Page extends Deserializable {
   @Expose title: object;
   @Expose type: string;
 }
+
+export class Post extends Deserializable {
+  @Expose content: object;
+  @Expose date: string;
+  @Expose id: number;
+  @Expose link: string;
+  @Expose slug: string;
+  @Expose title: object;
+  @Expose type: string;
+}

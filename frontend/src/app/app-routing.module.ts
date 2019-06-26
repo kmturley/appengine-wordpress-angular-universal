@@ -7,9 +7,19 @@ import { AuthService } from './shared/auth.service';
 
 const routes: Routes = [
   {
+    path: 'modules/category',
+    pathMatch: 'full',
+    loadChildren: './category/category.module#CategoryModule'
+  },
+  {
     path: 'modules/page',
     pathMatch: 'full',
     loadChildren: './page/page.module#PageModule'
+  },
+  {
+    path: 'modules/post',
+    pathMatch: 'full',
+    loadChildren: './post/post.module#PostModule'
   }
 ];
 
