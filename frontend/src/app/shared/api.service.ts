@@ -35,8 +35,8 @@ export class ApiService {
   getCategory(id: number): Observable<Category> {
     const key = this.createKey(`categories`, id);
     const url = this.createUrl(`categories/${id}`);
-    return this.get(url, key, (): Observable<any> => {
-      return this.http.get<Category>(url).pipe(
+    return this.get(url, key, (updatedUrl: string): Observable<any> => {
+      return this.http.get<Category>(updatedUrl).pipe(
         map(data => this.set(key, new Category().deserialize(data))),
         catchError(() => throwError('Category not found'))
       );
@@ -46,8 +46,8 @@ export class ApiService {
   getCategories(): Observable<Category[]> {
     const key = this.createKey(`categories`);
     const url = this.createUrl(`categories`);
-    return this.get(url, key, (): Observable<any> => {
-      return this.http.get<Category[]>(url).pipe(
+    return this.get(url, key, (updatedUrl: string): Observable<any> => {
+      return this.http.get<Category[]>(updatedUrl).pipe(
         map(items => this.set(key, items.map(item => new Category().deserialize(item))))
       );
     });
@@ -56,8 +56,8 @@ export class ApiService {
   getPage(id: number): Observable<Page> {
     const key = this.createKey(`pages`, id);
     const url = this.createUrl(`pages/${id}`);
-    return this.get(url, key, (): Observable<any> => {
-      return this.http.get<Page>(url).pipe(
+    return this.get(url, key, (updatedUrl: string): Observable<any> => {
+      return this.http.get<Page>(updatedUrl).pipe(
         map(data => this.set(key, new Page().deserialize(data))),
         catchError(() => throwError('Page not found'))
       );
@@ -67,8 +67,8 @@ export class ApiService {
   getPages(): Observable<Page[]> {
     const key = this.createKey(`pages`);
     const url = this.createUrl(`pages`);
-    return this.get(url, key, (): Observable<any> => {
-      return this.http.get<Page[]>(url).pipe(
+    return this.get(url, key, (updatedUrl: string): Observable<any> => {
+      return this.http.get<Page[]>(updatedUrl).pipe(
         map(items => this.set(key, items.map(item => new Page().deserialize(item))))
       );
     });
@@ -77,8 +77,8 @@ export class ApiService {
   getPost(id: number): Observable<Post> {
     const key = this.createKey(`posts`, id);
     const url = this.createUrl(`posts/${id}`);
-    return this.get(url, key, (): Observable<any> => {
-      return this.http.get<Post>(url).pipe(
+    return this.get(url, key, (updatedUrl: string): Observable<any> => {
+      return this.http.get<Post>(updatedUrl).pipe(
         map(data => this.set(key, new Post().deserialize(data))),
         catchError(() => throwError('Post not found'))
       );
@@ -88,32 +88,32 @@ export class ApiService {
   getPosts(): Observable<Post[]> {
     const key = this.createKey(`posts`);
     const url = this.createUrl(`posts`);
-    return this.get(url, key, (): Observable<any> => {
-      return this.http.get<Post[]>(url).pipe(
+    return this.get(url, key, (updatedUrl: string): Observable<any> => {
+      return this.http.get<Post[]>(updatedUrl).pipe(
         map(items => this.set(key, items.map(item => new Post().deserialize(item))))
       );
     });
   }
 
-  get(url: string, id: string, http: () => Observable<any>): Observable<any> {
+  get(url: string, id: string, http: (updatedUrl: string) => Observable<any>): Observable<any> {
     const key = makeStateKey(id);
     if (this.data[id] && isPlatformBrowser(this.platformId)) {
-      console.log('api.get.data', url, id);
+      console.log('api.get.data', id);
       return of(this.data[id]);
     } else if (this.transferState.hasKey(key)) {
-      console.log('api.get.transferState', url, id);
+      console.log('api.get.transferState', id);
       return of(this.transferState.get(key, null));
     } else {
       if (environment.production && isPlatformBrowser(this.platformId)) {
         url = `./json/${id}.json`;
       }
-      console.log('api.get.http', url, id);
-      return http();
+      console.log('api.get.http', id);
+      return http(url);
     }
   }
 
   set(id: string, data: any) {
-    console.log('api.set', id, data);
+    console.log('api.set', id);
     const key = makeStateKey(id);
     this.data[id] = data;
     this.transferState.set(key, data);

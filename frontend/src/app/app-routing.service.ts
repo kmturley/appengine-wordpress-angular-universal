@@ -24,7 +24,6 @@ export class AppRoutingService {
       this.api.getPosts(),
     ]);
     observe.subscribe(values => {
-      console.log('getRoutes', values);
       values.forEach((value) => {
         this.addRoutes(value);
       });
