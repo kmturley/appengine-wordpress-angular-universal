@@ -1,1 +1,2 @@
-{{ data | json }}
+<h1 [innerHTML]="(page | async)?.title.rendered"></h1>
+<p [innerHTML]="(page | async)?.content.rendered"></p>

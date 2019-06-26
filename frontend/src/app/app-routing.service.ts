@@ -35,17 +35,20 @@ export class AppRoutingService {
   addRoutes(items) {
     items.forEach(route => {
       let path = route.link.slice(environment.url.length + 1, -1);
-      const title = route.title ? route.title.rendered : route.name;
       const type = route.type ? route.type : route.taxonomy;
       if (path.startsWith('./')) {
         path = path.slice(2);
+      }
+      if (path === 'home') {
+        path = '';
       }
       this.routes.push({
           pathMatch: 'full',
           path: path,
           loadChildren: './' + type + '/' + type + '.module#' + type.charAt(0).toUpperCase() + type.slice(1) + 'Module',
           data: {
-            title: title,
+            id: route.id,
+            title: route.title ? route.title.rendered : route.name,
             type: type
           }
       });

@@ -17,9 +17,10 @@ export class NavigationComponent implements OnInit {
 
   ngOnInit() {
     this.items = this.routeService.routes;
-    console.log(this.items);
     const routerConfig = this.router.config;
-    this.items.forEach(route => { routerConfig.push(route); });
+    this.items.forEach(route => {
+      routerConfig.push(route);
+    });
     this.router.resetConfig(routerConfig);
   }
 

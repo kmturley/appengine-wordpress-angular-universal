@@ -1,14 +1,24 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
+
 import { PageComponent } from './page.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+const routes: Routes = [
+  {
+    path: '',
+    pathMatch: 'full',
+    component: PageComponent
+  }
+];
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule
+    RouterModule.forChild(routes)
   ],
-  declarations: []
+  declarations: [
+    PageComponent
+  ]
 })
 export class PageModule { }
