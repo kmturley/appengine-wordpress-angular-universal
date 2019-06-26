@@ -21,58 +21,61 @@ export class ApiService {
   ) { }
 
   getCategory(url: string, id: string): Observable<Category> {
-    return this.http.get<Category>(url).pipe(
-      map(data => new Category().deserialize(data)),
-      catchError(() => throwError('Category not found'))
-    );
+    return this.get(url, id, (): Observable<any> => {
+      return this.http.get<Category>(url).pipe(
+        map(data => this.set(id, new Category().deserialize(data))),
+        catchError(() => throwError('Category not found'))
+      );
+    });
   }
 
   getCategories(url: string, id: string): Observable<Category[]> {
-    return this.http.get<Category[]>(url).pipe(
-      map(items => items.map(item => new Category().deserialize(item)))
-    );
+    return this.get(url, id, (): Observable<any> => {
+      return this.http.get<Category[]>(url).pipe(
+        map(items => this.set(id, items.map(item => new Category().deserialize(item))))
+      );
+    });
   }
 
   getPage(url: string, id: string): Observable<Page> {
-    return this.http.get<Page>(url).pipe(
-      map(data => new Page().deserialize(data)),
-      catchError(() => throwError('Page not found'))
-    );
+    return this.get(url, id, (): Observable<any> => {
+      return this.http.get<Page>(url).pipe(
+        map(data => this.set(id, new Page().deserialize(data))),
+        catchError(() => throwError('Page not found'))
+      );
+    });
   }
 
   getPages(url: string, id: string): Observable<Page[]> {
-    return this.http.get<Page[]>(url).pipe(
-      map(items => items.map(item => new Page().deserialize(item)))
-    );
+    return this.get(url, id, (): Observable<any> => {
+      return this.http.get<Page[]>(url).pipe(
+        map(items => this.set(id, items.map(item => new Page().deserialize(item))))
+      );
+    });
   }
 
+  get(url: string, id: string, http: () => Observable<any>): Observable<any> {
+    const key = makeStateKey(id);
+    if (this.data[id] && isPlatformBrowser(this.platformId)) {
+      console.log('api.get.data', url, id);
+      return of(this.data[id]);
+    } else if (this.transferState.hasKey(key)) {
+      console.log('api.get.transferState', url, id);
+      return of(this.transferState.get(key, null));
+    } else {
+      if (environment.production && isPlatformBrowser(this.platformId)) {
+        url = `./json/${id}.json`;
+      }
+      console.log('api.get.http', url, id);
+      return http();
+    }
+  }
 
-  // get(url: string, id: string): Observable<any> {
-  //   console.log('api.get', url, id);
-  //   const key = makeStateKey(id);
-  //   if (this.data[id] && isPlatformBrowser(this.platformId)) {
-  //     console.log('api.get.data');
-  //     return of(this.data[id]);
-  //   } else if (this.transferState.hasKey(key)) {
-  //     console.log('api.get.transferState');
-  //     const item = this.transferState.get(key, null);
-  //     return of(item);
-  //   } else {
-  //     console.log('api.get.http');
-  //     if (environment.production && isPlatformBrowser(this.platformId)) {
-  //       url = `./json/${id}.json`;
-  //     }
-  //     return this.http.get(url).pipe(
-  //       map(items => {
-  //         this.data[id] = items;
-  //         this.transferState.set(key, items);
-  //         return items;
-  //       })
-  //     );
-  //   }
-  // }
-
-  // post(url, data) {
-  //   return this.http.post(url, data);
-  // }
+  set(id: string, data: any) {
+    console.log('api.set', id, data);
+    const key = makeStateKey(id);
+    this.data[id] = data;
+    this.transferState.set(key, data);
+    return data;
+  }
 }
