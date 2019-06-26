@@ -1,19 +1,18 @@
 import 'reflect-metadata';
 
-export const Metadata: any = {};
+const CUSTOM_PROPS = 'custom:properties';
 
 export function Expose(target: any, key: string) {
-  const type = Reflect.getMetadata('design:type', target, key);
-  if (!Metadata[target.constructor.name]) {
-    Metadata[target.constructor.name] = {};
-  }
-  Metadata[target.constructor.name][key] = type;
+  const properties = Reflect.getMetadata(CUSTOM_PROPS, target) || [];
+  properties.push(key);
+  Reflect.defineMetadata(CUSTOM_PROPS, properties, target);
 }
 
 export class Deserializable {
   deserialize(input: object): this {
-    Object.keys(Metadata[this.constructor.name]).forEach(key => {
-      this[key] = input[key] || Metadata[this.constructor.name][key]();
+    const properties = Reflect.getMetadata(CUSTOM_PROPS, this);
+    properties.forEach(key => {
+      this[key] = input[key];
     });
     return this;
   }
