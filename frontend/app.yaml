@@ -3,13 +3,114 @@ service: default
 
 handlers:
 - url: /
+  secure: always
   static_files: dist/browser/index.html
   upload: dist/browser/index.html
+  http_headers:
+    X-Frame-Options: "DENY"
+    Strict-Transport-Security: "max-age=2592000; includeSubdomains"
+    X-Content-Type-Options: "nosniff"
+    X-XSS-Protection: "1; mode=block"
+    Content-Security-Policy: "
+      base-uri 'self';
+      font-src 'self'
+        https://fonts.gstatic.com;
+      img-src 'self'
+        data:
+        https://storage.googleapis.com;
+      object-src 'none';
+      script-src 'self'
+        'unsafe-inline'
+        https://accounts.google.com
+        https://ajax.googleapis.com
+        https://apis.google.com
+        https://ssl.gstatic.com;
+      style-src 'self'
+        'unsafe-inline'
+        https://fonts.googleapis.com
+        https://ssl.gstatic.com;"
 
 - url: /json/(.*\.json)$
+  secure: always
   static_files: dist/browser/json/\1
   upload: dist/browser/json/(.*)
+  http_headers:
+    X-Frame-Options: "DENY"
+    Strict-Transport-Security: "max-age=2592000; includeSubdomains"
+    X-Content-Type-Options: "nosniff"
+    X-XSS-Protection: "1; mode=block"
+    Content-Security-Policy: "
+      base-uri 'self';
+      font-src 'self'
+        https://fonts.gstatic.com;
+      img-src 'self'
+        data:
+        https://storage.googleapis.com;
+      object-src 'none';
+      script-src 'self'
+        'unsafe-inline'
+        https://accounts.google.com
+        https://ajax.googleapis.com
+        https://apis.google.com
+        https://ssl.gstatic.com;
+      style-src 'self'
+        'unsafe-inline'
+        https://fonts.googleapis.com
+        https://ssl.gstatic.com;"
+
+- url: /(.*\.webmanifest)
+  secure: always
+  static_files: dist/browser/\1
+  upload: dist/browser/(.*\.webmanifest)
+  mime_type: text/json
+  http_headers:
+    X-Frame-Options: "DENY"
+    Strict-Transport-Security: "max-age=2592000; includeSubdomains"
+    X-Content-Type-Options: "nosniff"
+    X-XSS-Protection: "1; mode=block"
+    Content-Security-Policy: "
+      base-uri 'self';
+      font-src 'self'
+        https://fonts.gstatic.com;
+      img-src 'self'
+        data:
+        https://storage.googleapis.com;
+      object-src 'none';
+      script-src 'self'
+        'unsafe-inline'
+        https://accounts.google.com
+        https://ajax.googleapis.com
+        https://apis.google.com
+        https://ssl.gstatic.com;
+      style-src 'self'
+        'unsafe-inline'
+        https://fonts.googleapis.com
+        https://ssl.gstatic.com;"
 
 - url: /(.*)
+  secure: always
   static_files: dist/browser/\1
   upload: dist/browser/(.*)
+  http_headers:
+    X-Frame-Options: "DENY"
+    Strict-Transport-Security: "max-age=2592000; includeSubdomains"
+    X-Content-Type-Options: "nosniff"
+    X-XSS-Protection: "1; mode=block"
+    Content-Security-Policy: "
+      base-uri 'self';
+      font-src 'self'
+        https://fonts.gstatic.com;
+      img-src 'self'
+        data:
+        https://storage.googleapis.com;
+      object-src 'none';
+      script-src 'self'
+        'unsafe-inline'
+        https://accounts.google.com
+        https://ajax.googleapis.com
+        https://apis.google.com
+        https://ssl.gstatic.com;
+      style-src 'self'
+        'unsafe-inline'
+        https://fonts.googleapis.com
+        https://ssl.gstatic.com;"
