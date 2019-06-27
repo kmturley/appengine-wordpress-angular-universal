@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { ApiService } from '../shared/api.service';
-import { environment } from '../../environments/environment';
 import { Page } from '../shared/models';
 
 @Component({
